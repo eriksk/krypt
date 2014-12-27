@@ -17,3 +17,5 @@ public fun arrayOfZeroes(size: Int): Array<Int>{
     size.times { ary.add(0) }
     return ary.copyToArray()
 }
+
+public fun lerp(x: Float, y: Float, t: Float): Float = x + (y - x) * t

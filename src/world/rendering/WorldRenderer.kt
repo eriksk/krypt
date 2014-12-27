@@ -15,6 +15,8 @@ class WorldRenderer(val atlas: TextureAtlas){
     val translations = hashMapOf<Int, Int>()
 
     public fun load(){
+        image.setFilter(Image.FILTER_NEAREST)
+
         translations.clear()
 
         translations.put(0 ,3)
@@ -37,7 +39,7 @@ class WorldRenderer(val atlas: TextureAtlas){
     }
 
     public fun render(world: World){
-        val startRow = 3
+        val startRow = 6
 
         image.startUse()
 
