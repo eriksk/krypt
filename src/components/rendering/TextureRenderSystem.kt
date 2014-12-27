@@ -6,11 +6,12 @@ import skoggy.ecs.Renderable
 import components.animation.AnimationComponent
 import org.newdawn.slick.Image
 import org.newdawn.slick.geom.Rectangle
+import skoggy.ecs.Component
 
 /**
  * Created by erikskoglund on 2014-12-25.
  */
-class TextureRenderSystem(entity: Entity, val texture: Texture) : ecs.Component(entity), Renderable {
+class TextureRenderSystem(entity: Entity, val texture: Texture) : Component(entity), Renderable {
 
     val img = Image(texture)
 

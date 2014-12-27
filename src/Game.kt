@@ -13,15 +13,28 @@ import components.animation.AnimationComponent
 import animations.FrameStepAnimation
 import components.input.AnimationInputControllerComponent
 import content.ContentManager
+import world.generation.World
+import world.tiling.AutoTiler
+import world.generation.WorldGenerator
+import world.rendering.WorldRenderer
+import sprites.TextureAtlas
 
 class Game(title: String) : BasicGame(title) {
 
     val content = ContentManager("content")
     val manager = EntityManager()
 
+    val world = World(128, 128, AutoTiler(0))
+    var worldRenderer: WorldRenderer? = null
+
     override fun init(container: GameContainer?) {
 
-        manager.add(createPaladin())
+        worldRenderer = WorldRenderer(TextureAtlas(16, content.load("gfx/DawnLike_3/Objects/Wall")))
+
+        //manager.add(createPaladin())
+        val generator = WorldGenerator(world)
+        generator.generate()
+
         manager.start()
     }
 
@@ -29,12 +42,12 @@ class Game(title: String) : BasicGame(title) {
         val paladin = Entity("Paladin")
 
         var animations = hashMapOf<String, FrameStepAnimation>()
-        animations.put("walk_south", animations.FrameStepAnimation(array(0, 1, 2, 3), 100f))
-        animations.put("walk_west", animations.FrameStepAnimation(array(4, 5, 6, 7), 100f))
-        animations.put("walk_east", animations.FrameStepAnimation(array(8, 9, 10, 11), 100f))
-        animations.put("walk_north", animations.FrameStepAnimation(array(12, 13, 14, 15), 100f))
+        animations.put("walk_south", FrameStepAnimation(array(0, 1, 2, 3), 100f))
+        animations.put("walk_west", FrameStepAnimation(array(4, 5, 6, 7), 100f))
+        animations.put("walk_east", FrameStepAnimation(array(8, 9, 10, 11), 100f))
+        animations.put("walk_north", FrameStepAnimation(array(12, 13, 14, 15), 100f))
 
-        paladin.addComponent(TextureRenderSystem(paladin, content.load("gfx/paladin")))
+        paladin.addComponent(TextureRenderSystem(paladin, content.load("gfx/DawnLike_3/Commissions/Paladin")))
         paladin.addComponent(AnimationComponent(paladin, animations))
         paladin.addComponent(AnimationInputControllerComponent(paladin))
 
@@ -49,5 +62,6 @@ class Game(title: String) : BasicGame(title) {
 
     override fun render(container: GameContainer?, g: Graphics?) {
         manager.draw()
+        worldRenderer?.render(world)
     }
 }
