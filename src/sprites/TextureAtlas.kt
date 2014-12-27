@@ -11,18 +11,22 @@ class TextureAtlas(val cellSize: Int, val texture: Texture){
     val cellCache = hashMapOf<Int, AtlasCell>()
 
     val columns : Int
-        get() = texture.getTextureWidth() / cellSize
+        get() = texture.getImageWidth() / cellSize
 
     val rows : Int
-        get() = texture.getTextureHeight() / cellSize
+        get() = texture.getImageHeight() / cellSize
 
 
     public fun get(index: Int): AtlasCell {
-        if (cellCache.containsKey(index))
-            return cellCache.get(index)
+     //   if (cellCache.containsKey(index))
+       //     return cellCache.get(index)
 
-        val cell = AtlasCell(this, index % columns, index / rows)
-        cellCache.put(index, cell)
+        val col = index % columns
+        val row = index / columns
+
+        val cell = AtlasCell(this, col, row)
+
+      //  cellCache.put(index, cell)
         return cell
     }
 }

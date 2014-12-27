@@ -2,12 +2,12 @@ package world.generation
 
 import world.Cell
 import java.util.ArrayList
-import krypt.rand
+import java.util.Random
 
 /**
  * Created by erikskoglund on 2014-12-27.
  */
-class Digger(col : Int, row : Int){
+class Digger(col : Int, row : Int, val rand: Random){
     var position = Cell(col, row)
     val directions = arrayListOf(
         Cell(-1, 0),
@@ -21,16 +21,16 @@ class Digger(col : Int, row : Int){
     var stepsTaken = 0
 
     fun getRandomDirection():Cell{
-        return directions[(directions.size() * rand()).toInt()]
+        return directions[(directions.size() * rand.nextFloat()).toInt()]
     }
 
     fun directionValid(world :World, dir: Cell):Boolean{
-        return world.getSafe(position.col + dir.col, position.row + dir.row) != 0
+        return world.getSafe(position.col + dir.col, position.row + dir.row, 0) != 0
     }
 
     public fun update(world: World, turnChance: Float){
 
-        if(rand() > turnChance) {
+        if(rand.nextFloat() > turnChance) {
             direction = getRandomDirection()
         }
 

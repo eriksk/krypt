@@ -10,9 +10,9 @@ class World(val width: Int, val height: Int, val autoTiler: AutoTiler){
     val size = width * height
     val data = arrayOfZeroes(size)
 
-    public fun getSafe(col: Int, row: Int): Int{
+    public fun getSafe(col: Int, row: Int, default: Int): Int{
         if(col < 0 || row < 0 || col > width - 1 || row > height - 1)
-            return 0
+            return default
         return data[col + row * width]
     }
 

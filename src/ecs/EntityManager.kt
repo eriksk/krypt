@@ -6,6 +6,14 @@ package skoggy.ecs
 class EntityManager{
     val entities = arrayListOf<Entity>()
 
+    public fun getEntity(name: String):Entity{
+        for(entity in entities){
+            if(entity.name.equals(name))
+                return entity
+        }
+        throw IllegalArgumentException("Entity with name '$name' does not exist")
+    }
+
     public fun add(entity: Entity){
         entities.add(entity)
     }

@@ -18,50 +18,38 @@ import world.tiling.AutoTiler
 import world.generation.WorldGenerator
 import world.rendering.WorldRenderer
 import sprites.TextureAtlas
+import org.lwjgl.input.Keyboard
+import org.newdawn.slick.Color
+import kotlin.concurrent.thread
+import components.factories.WorldFactory
+import components.worlds.WorldGeneratorComponent
 
 class Game(title: String) : BasicGame(title) {
 
     val content = ContentManager("content")
     val manager = EntityManager()
 
-    val world = World(128, 128, AutoTiler(0))
-    var worldRenderer: WorldRenderer? = null
 
     override fun init(container: GameContainer?) {
 
-        worldRenderer = WorldRenderer(TextureAtlas(16, content.load("gfx/DawnLike_3/Objects/Wall")))
-
-        //manager.add(createPaladin())
-        val generator = WorldGenerator(world)
-        generator.generate()
+        val worldFactory = WorldFactory(content)
+        manager.add(worldFactory.create())
 
         manager.start()
     }
 
-    fun createPaladin() : Entity{
-        val paladin = Entity("Paladin")
-
-        var animations = hashMapOf<String, FrameStepAnimation>()
-        animations.put("walk_south", FrameStepAnimation(array(0, 1, 2, 3), 100f))
-        animations.put("walk_west", FrameStepAnimation(array(4, 5, 6, 7), 100f))
-        animations.put("walk_east", FrameStepAnimation(array(8, 9, 10, 11), 100f))
-        animations.put("walk_north", FrameStepAnimation(array(12, 13, 14, 15), 100f))
-
-        paladin.addComponent(TextureRenderSystem(paladin, content.load("gfx/DawnLike_3/Commissions/Paladin")))
-        paladin.addComponent(AnimationComponent(paladin, animations))
-        paladin.addComponent(AnimationInputControllerComponent(paladin))
-
-        paladin.transform.position.set(1280/2f, 720/2f)
-
-        return paladin
-    }
-
     override fun update(container: GameContainer?, delta: Int) {
         manager.update(delta.toFloat())
+
+        if(container?.getInput()?.isKeyPressed(Keyboard.KEY_SPACE) == true){
+            manager.getEntity("world").getComponent(javaClass<WorldGeneratorComponent>()).generate(System.currentTimeMillis().toInt())
+        }
     }
 
     override fun render(container: GameContainer?, g: Graphics?) {
+        g?.setBackground(Color(100f / 255f, 149f / 255f, 237f / 255f, 1f))
+        g?.clear()
+
         manager.draw()
-        worldRenderer?.render(world)
     }
 }
