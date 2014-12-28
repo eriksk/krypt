@@ -5,6 +5,8 @@ import skoggy.ecs.Component
 import skoggy.ecs.Updateable
 import components.animation.AnimationComponent
 import org.lwjgl.input.Keyboard
+import components.characters.CharacterMovementController
+import world.Direction
 
 /**
  * Created by erikskoglund on 2014-12-25.
@@ -13,23 +15,16 @@ class AnimationInputControllerComponent(entity: Entity) : Component(entity), Upd
 
     override fun update(dt: Float) {
 
-        val anims = getComponent(javaClass<AnimationComponent>())
-
-        val speed = 0.09f
+        val controller = getComponent(javaClass<CharacterMovementController>())
 
         if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
-            anims.setAnim("walk_west")
-            transform.position.x -= speed * dt
+            controller.move(Direction.WEST, dt)
         }else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-            anims.setAnim("walk_east")
-            transform.position.x += speed * dt
+            controller.move(Direction.EAST, dt)
         }else if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-            anims.setAnim("walk_north")
-            transform.position.y -= speed * dt
+            controller.move(Direction.NORTH, dt)
         }else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
-            anims.setAnim("walk_south")
-            transform.position.y += speed * dt
+            controller.move(Direction.SOUTH, dt)
         }
     }
-
 }

@@ -13,9 +13,19 @@ class Camera(val width: Float, val height: Float){
     var target = Vector2f()
     val speed = 0.01f
 
+    public fun setPosition(x: Float, y: Float){
+        transform.position.x = x
+        transform.position.y = y
+    }
+
     public fun move(target: Vector2f){
         this.target.x = target.x
         this.target.y = target.y
+    }
+
+    public fun setScale(scale: Float){
+        transform.scale.x = scale;
+        transform.scale.y = scale;
     }
 
     public fun update(dt: Float){

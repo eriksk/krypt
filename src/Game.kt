@@ -25,16 +25,19 @@ import components.factories.WorldFactory
 import components.worlds.WorldGeneratorComponent
 import components.factories.CharacterFactory
 import cameras.Camera
+import org.newdawn.slick.Font
 
 class Game(title: String) : BasicGame(title) {
 
     val content = ContentManager("content")
     val manager = EntityManager()
 
-    // TODO: move camera to an entity?`or not?
     val cam = Camera(1280f, 720f)
+    val uiCam = Camera(1280f, 720f)
+    var font : Font? = null
 
     override fun init(container: GameContainer?) {
+        font = content.loadFont("SDS_8x8", 16)
 
         val worldFactory = WorldFactory(content)
         manager.add(worldFactory.create())
@@ -44,6 +47,8 @@ class Game(title: String) : BasicGame(title) {
         player.transform.position.set(1280/2f,720/2f)
         manager.add(player)
 
+
+        cam.setPosition(1280/2f,720/2f)
         manager.start()
     }
 
@@ -54,10 +59,10 @@ class Game(title: String) : BasicGame(title) {
             manager.getEntity("world").getComponent(javaClass<WorldGeneratorComponent>()).generate(System.currentTimeMillis().toInt())
         }
 
-        cam.transform.scale.set(1f, 1f)
-
+        cam.setScale(2f)
         cam.move(manager.getEntity("player").transform.position)
         cam.update(delta.toFloat())
+        uiCam.update(delta.toFloat())
     }
 
     override fun render(container: GameContainer?, g: Graphics?) {
@@ -67,5 +72,9 @@ class Game(title: String) : BasicGame(title) {
         cam.lookThrough(g)
 
         manager.draw()
+
+        g?.resetTransform()
+        uiCam.lookThrough(g)
+        font?.drawString(0f, 0f, "HEWLLO WORLD!")
     }
 }

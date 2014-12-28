@@ -29,4 +29,17 @@ class TextureAtlas(val cellSize: Int, val texture: Texture) {
         cellCache.put(index, cell)
         return cell
     }
+
+    public fun get(index: Int, columns:Int, rows:Int): AtlasCell {
+        if (cellCache.containsKey(index))
+            return cellCache.get(index)
+
+        val col = index % columns
+        val row = index / columns
+
+        val cell = AtlasCell(this, col, row)
+
+        cellCache.put(index, cell)
+        return cell
+    }
 }

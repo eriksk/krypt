@@ -39,19 +39,21 @@ class WorldRenderer(val atlas: TextureAtlas){
     }
 
     public fun render(world: World){
-        val startRow = 6
+        val startRow = 3
 
         image.startUse()
 
         world.width.indices.forEach { col ->
             world.height.indices.forEach { row ->
                 val cell = world.get(col, row)
-                val atlasCell = atlas.get(if(cell == 16) 9 else translations.get(cell) + (startRow * atlas.columns))
+                if(cell != 16) {
+                    val atlasCell = atlas.get(if(cell == 16) 9 else translations.get(cell) + (startRow * atlas.columns))
 
-                image.drawEmbedded(
-                        col * atlas.cellSize.toFloat(), row * atlas.cellSize.toFloat(),
-                        (col * atlas.cellSize + atlas.cellSize).toFloat(), (row * atlas.cellSize + atlas.cellSize).toFloat(),
-                        atlasCell.x.toFloat(), atlasCell.y.toFloat(), atlasCell.x2.toFloat(), atlasCell.y2.toFloat())
+                    image.drawEmbedded(
+                            col * atlas.cellSize.toFloat(), row * atlas.cellSize.toFloat(),
+                            (col * atlas.cellSize + atlas.cellSize).toFloat(), (row * atlas.cellSize + atlas.cellSize).toFloat(),
+                            atlasCell.x.toFloat(), atlasCell.y.toFloat(), atlasCell.x2.toFloat(), atlasCell.y2.toFloat())
+                }
             }
         }
 
