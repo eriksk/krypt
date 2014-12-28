@@ -32,6 +32,7 @@ import components.factories.MobFactory
 import krypt.rand
 import components.worlds.WorldComponent
 import java.util.Random
+import krypt.lerp
 
 class Game(title: String) : BasicGame(title) {
 
@@ -47,25 +48,32 @@ class Game(title: String) : BasicGame(title) {
     override fun init(container: GameContainer?) {
         font = content.loadFont("SDS_8x8", 8)
 
-        val worldFactory = WorldFactory(content)
-        manager.add(worldFactory.create())
+        stats = GuiStatBox(TextureAtlas(16, content.load("gfx/DawnLike_3/GUI/GUI0")), font!!)
 
-        val characterFactory = CharacterFactory(content)
-        val player = characterFactory.create()
-        player.transform.position.set(1280/2f,720/2f)
-        manager.add(player)
+        generate()
+    }
 
-        val mobFactory = MobFactory(content)
+    fun generate(){
+        manager.clear()
+
         val rand = Random(System.currentTimeMillis())
 
-        120.times{
-            val cell = manager.getEntity("world").getComponent(javaClass<WorldComponent>()).world.getRandomCell(0, rand)
+        val worldFactory = WorldFactory(content)
+        manager.add(worldFactory.create())
+        val world = manager.getEntity("world").getComponent(javaClass<WorldComponent>()).world
+        manager.getEntity("world").getComponent(javaClass<WorldGeneratorComponent>()).generate(System.currentTimeMillis().toInt())
+
+        val characterFactory = CharacterFactory(content, world)
+        val cell = manager.getEntity("world").getComponent(javaClass<WorldComponent>()).world.getRandomCell(0, rand)
+        manager.add(characterFactory.create((cell.col * 16f) + 8f, (cell.row * 16f) + 8f))
+
+        val mobFactory = MobFactory(content)
+
+        lerp(1f, 400f, world.density).toInt().times{
+            val cell = world.getRandomCell(0, rand)
             manager.add(mobFactory.create((cell.col * 16f) + 8f, (cell.row * 16f) + 8f))
         }
 
-        stats = GuiStatBox(TextureAtlas(16, content.load("gfx/DawnLike_3/GUI/GUI0")), font!!)
-
-        cam.setPosition(1280/2f,720/2f)
         manager.start()
     }
 
@@ -73,7 +81,7 @@ class Game(title: String) : BasicGame(title) {
         manager.update(delta.toFloat())
 
         if(container?.getInput()?.isKeyPressed(Keyboard.KEY_SPACE) == true){
-            manager.getEntity("world").getComponent(javaClass<WorldGeneratorComponent>()).generate(System.currentTimeMillis().toInt())
+            generate()
         }
 
         uiCam.setScale(1f)

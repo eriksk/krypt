@@ -14,6 +14,10 @@ class EntityManager{
         throw IllegalArgumentException("Entity with name '$name' does not exist")
     }
 
+    fun clear() {
+        entities.clear()
+    }
+
     public fun add(entity: Entity){
         entities.add(entity)
     }

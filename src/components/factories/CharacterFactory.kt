@@ -10,11 +10,16 @@ import sprites.TextureAtlas
 import content.ContentManager
 import components.input.AnimationInputControllerComponent
 import components.characters.CharacterMovementController
+import components.collision.WorldCollisionComponent
+import world.generation.World
+import components.characters.CharacterShadowComponent
+import components.characters.HealthComponent
+import components.characters.HealthDisplayComponent
 
 /**
  * Created by Erik on 2014-12-27.
  */
-class CharacterFactory(val content: ContentManager) : EntityFactory {
+class CharacterFactory(val content: ContentManager, val world: World) : EntityFactory {
 
     override fun create(): Entity {
         return create(0f, 0f)
@@ -33,12 +38,17 @@ class CharacterFactory(val content: ContentManager) : EntityFactory {
         )
 
         val atlas = TextureAtlas(16, content.load("gfx/DawnLike_3/Commissions/Paladin"))
+        val guiAtlas = TextureAtlas(16, content.load("gfx/DawnLike_3/GUI/GUI0"))
 
+        entity.addComponent(HealthComponent(entity, 100))
+        entity.addComponent(CharacterShadowComponent(entity, content.load("gfx/shadow")))
         entity.addComponent(AnimationComponent(entity, animations))
         entity.addComponent(CharacterComponent(entity))
         entity.addComponent(CharacterRenderer(entity, atlas))
         entity.addComponent(AnimationInputControllerComponent(entity))
         entity.addComponent(CharacterMovementController(entity))
+        entity.addComponent(WorldCollisionComponent(entity, world))
+        entity.addComponent(HealthDisplayComponent(entity, guiAtlas))
 
         entity.transform.position.set(x, y)
         return entity

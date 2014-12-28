@@ -25,7 +25,7 @@ class WorldFactory(val content: ContentManager) : EntityFactory{
     override fun create(x: Float, y: Float): Entity {
         val entity = Entity("world")
 
-        val world = World(64, 64, AutoTiler())
+        val world = World(16, 64, 64, AutoTiler())
         val renderer = WorldRenderer(TextureAtlas(16, content.load("gfx/DawnLike_3/Objects/Wall")))
         renderer.load()
         val generator = WorldGenerator(world)

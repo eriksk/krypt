@@ -11,6 +11,9 @@ import components.input.AnimationInputControllerComponent
 import components.characters.CharacterMovementController
 import content.ContentManager
 import krypt.rand
+import components.characters.CharacterShadowComponent
+import components.characters.HealthComponent
+import components.characters.HealthDisplayComponent
 
 /**
  * Created by Erik on 2014-12-28.
@@ -58,10 +61,14 @@ class MobFactory(val content: ContentManager) : EntityFactory{
         )
 
         val atlas = TextureAtlas(16, content.load("gfx/DawnLike_3/Characters/$mobName"))
+        val guiAtlas = TextureAtlas(16, content.load("gfx/DawnLike_3/GUI/GUI0"))
 
+        entity.addComponent(HealthComponent(entity, 100))
+        entity.addComponent(CharacterShadowComponent(entity, content.load("gfx/shadow")))
         entity.addComponent(AnimationComponent(entity, animations))
         entity.addComponent(CharacterComponent(entity))
         entity.addComponent(CharacterRenderer(entity, atlas))
+        entity.addComponent(HealthDisplayComponent(entity, guiAtlas))
 
         entity.transform.position.set(x, y)
 

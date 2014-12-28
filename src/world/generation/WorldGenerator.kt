@@ -63,7 +63,7 @@ class WorldGenerator(val world: World){
                 i++
             }
 
-            Thread.sleep(10)
+            //Thread.sleep(10)
             //        Thread.sleep(0.0001)
 
         }

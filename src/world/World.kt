@@ -9,9 +9,28 @@ import java.util.Random
 /**
  * Created by erikskoglund on 2014-12-27.
  */
-class World(val width: Int, val height: Int, val autoTiler: AutoTiler){
+class World(val cellSize: Int, val width: Int, val height: Int, val autoTiler: AutoTiler){
     val size = width * height
     val data = arrayOfZeroes(size)
+
+    val density : Float
+        get(){
+            var count = 0
+            width.indices.forEach{ col ->
+                height.indices.forEach { row ->
+                    count += if(get(col, row) == 0) 1 else 0
+                }
+            }
+            return count.toFloat() / (width * height).toFloat()
+        }
+
+    fun getCol(x: Float): Int {
+        return (x / cellSize.toFloat()).toInt()
+    }
+
+    fun getRow(y: Float): Int {
+        return (y / cellSize.toFloat()).toInt()
+    }
 
     public fun getRandomCell(index: Int, random: Random):Cell{
         while(true){
