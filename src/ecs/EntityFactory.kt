@@ -7,4 +7,5 @@ import skoggy.ecs.Entity
  */
 trait EntityFactory{
     fun create(): Entity
+    fun create(x: Float, y: Float): Entity
 }

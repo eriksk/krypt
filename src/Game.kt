@@ -26,6 +26,12 @@ import components.worlds.WorldGeneratorComponent
 import components.factories.CharacterFactory
 import cameras.Camera
 import org.newdawn.slick.Font
+import gui.GuiMessageBox
+import gui.implementations.GuiStatBox
+import components.factories.MobFactory
+import krypt.rand
+import components.worlds.WorldComponent
+import java.util.Random
 
 class Game(title: String) : BasicGame(title) {
 
@@ -36,8 +42,10 @@ class Game(title: String) : BasicGame(title) {
     val uiCam = Camera(1280f, 720f)
     var font : Font? = null
 
+    var stats : GuiStatBox? = null
+
     override fun init(container: GameContainer?) {
-        font = content.loadFont("SDS_8x8", 16)
+        font = content.loadFont("SDS_8x8", 8)
 
         val worldFactory = WorldFactory(content)
         manager.add(worldFactory.create())
@@ -47,6 +55,15 @@ class Game(title: String) : BasicGame(title) {
         player.transform.position.set(1280/2f,720/2f)
         manager.add(player)
 
+        val mobFactory = MobFactory(content)
+        val rand = Random(System.currentTimeMillis())
+
+        120.times{
+            val cell = manager.getEntity("world").getComponent(javaClass<WorldComponent>()).world.getRandomCell(0, rand)
+            manager.add(mobFactory.create((cell.col * 16f) + 8f, (cell.row * 16f) + 8f))
+        }
+
+        stats = GuiStatBox(TextureAtlas(16, content.load("gfx/DawnLike_3/GUI/GUI0")), font!!)
 
         cam.setPosition(1280/2f,720/2f)
         manager.start()
@@ -59,6 +76,7 @@ class Game(title: String) : BasicGame(title) {
             manager.getEntity("world").getComponent(javaClass<WorldGeneratorComponent>()).generate(System.currentTimeMillis().toInt())
         }
 
+        uiCam.setScale(1f)
         cam.setScale(2f)
         cam.move(manager.getEntity("player").transform.position)
         cam.update(delta.toFloat())
@@ -70,11 +88,11 @@ class Game(title: String) : BasicGame(title) {
         g?.clear()
 
         cam.lookThrough(g)
-
         manager.draw()
 
         g?.resetTransform()
         uiCam.lookThrough(g)
-        font?.drawString(0f, 0f, "HEWLLO WORLD!")
+
+        stats?.draw()
     }
 }

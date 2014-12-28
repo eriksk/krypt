@@ -14,8 +14,8 @@ class WorldGeneratorComponent(entity:Entity, val generator: WorldGenerator) : Co
 
     public fun generate(seed: Int){
         generateThread?.interrupt()
-        generateThread = thread(){
+        //generateThread = thread(){
             generator.generate(seed)
-        }
+        //}
     }
 }

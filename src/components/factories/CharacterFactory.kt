@@ -17,6 +17,10 @@ import components.characters.CharacterMovementController
 class CharacterFactory(val content: ContentManager) : EntityFactory {
 
     override fun create(): Entity {
+        return create(0f, 0f)
+    }
+
+    override fun create(x: Float, y: Float): Entity {
         val entity = Entity("player")
 
         val animationTime = 75f
@@ -36,6 +40,7 @@ class CharacterFactory(val content: ContentManager) : EntityFactory {
         entity.addComponent(AnimationInputControllerComponent(entity))
         entity.addComponent(CharacterMovementController(entity))
 
+        entity.transform.position.set(x, y)
         return entity
     }
 }
